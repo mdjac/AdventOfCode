@@ -3,17 +3,22 @@ const fs = require("fs");
 let array = fs.readFileSync(filepath).toString().split("\n\n");
 array = array.map((data) => data.split("\n"));
 
-let highest = 0;
+const sums = [];
 array.forEach((x) => {
   const initialValue = 0;
   const x_sum = x.reduce(
     (accumulator, currentValue) => accumulator + Number(currentValue),
     initialValue
   );
-  if (x_sum > highest) {
-    console.log(x);
-    highest = x_sum;
-  }
+  sums.push(x_sum);
 });
+sums.sort((a, b) => b - a);
 
-console.log(highest);
+//Part 1
+console.log("Highest: ", sums[0]);
+
+//Part 2
+const part2 = sums
+  .slice(0, 3)
+  .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+console.log("Sum of top3: ", part2);

@@ -1,6 +1,5 @@
-const filepath = "./input.txt";
-const fs = require("fs");
-let array = fs.readFileSync(filepath).toString().split("\n\n");
+const { importData } = require("../utility.js");
+let array = importData("./input.txt").split("\n\n");
 array = array.map((data) => data.split("\n"));
 
 const sums = [];

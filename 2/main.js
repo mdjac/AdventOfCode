@@ -1,4 +1,3 @@
-//Oversæt til 1,2,3 istedet for bogstaver
 const getAsNumbers = (inputString) => {
   const replacements = { A: 1, B: 2, C: 3, X: 1, Y: 2, Z: 3 };
   const result = inputString
@@ -7,37 +6,46 @@ const getAsNumbers = (inputString) => {
   return result;
 };
 
-//Funktion der tager 2 tal og returnere en vinder og returnere MIN score
-const calcRound = (_otherPlayer, _me) => {
-  const otherPlayer = Number(_otherPlayer);
-  const me = Number(_me);
-
-  let myScore;
-
-  //For win/draw/loss
-  if (me == otherPlayer) {
-    myScore = 3;
-  } else if (me > otherPlayer) {
-    myScore = 6;
-  } else {
-    myScore = 0;
-  }
-  myScore = myScore + me;
-  return myScore;
+const calcRound = (opponent, me) => {
+  let outcome = {
+    1: { 1: 3, 2: 6, 3: 0 },
+    2: { 1: 0, 2: 3, 3: 6 },
+    3: { 1: 6, 2: 0, 3: 3 },
+  }[opponent][me];
+  return Number(me) + Number(outcome);
 };
 
-//Få input i double array
-const filepath = "./input.txt";
-const fs = require("fs");
-let array = fs.readFileSync(filepath).toString().split("\n");
-console.log(array.length);
+const { importData } = require("../utility.js");
+let array = importData("./input.txt").split("\n");
 
-//Loop over alle runder og saml resultatet
+//PART 1
 const result = [];
 array.forEach((x) => {
   const asNumbers = getAsNumbers(x);
   const myScore = calcRound(asNumbers[0], asNumbers[1]);
   result.push(myScore);
 });
-result.sort();
-console.log(result.reduce((a, b) => a + b, 0));
+console.log(
+  "Part1: ",
+  result.reduce((a, b) => a + b, 0)
+);
+
+//PART 2
+const myCallBack = (acc, [opponent, , me]) => {
+  let outcome = {
+    A: { X: 3, Y: 4, Z: 8 },
+    B: { X: 1, Y: 5, Z: 9 },
+    C: { X: 2, Y: 6, Z: 7 },
+  }[opponent][me];
+  return acc + outcome;
+};
+const resultPart2 = array.reduce(myCallBack, 0);
+/* const resultPart2 = array.reduce((acc, [opponent, , me]) => {
+  let outcome = {
+    A: { X: 3, Y: 4, Z: 8 },
+    B: { X: 1, Y: 5, Z: 9 },
+    C: { X: 2, Y: 6, Z: 7 },
+  }[opponent][me];
+  return acc + outcome;
+}, 0); */
+console.log("Part2: ", resultPart2);
